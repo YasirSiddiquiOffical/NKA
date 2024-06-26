@@ -23,3 +23,9 @@ jobs:
         start /wait msiexec /i "https://dl.google.com/edgedl/chrome-remote-desktop/chromeremotedesktophost.msi" /quiet
         "%PROGRAMFILES(X86)%\Google\Chrome Remote Desktop\CurrentVersion\remoting_start_host.exe" --code="4/0ATx3LY7ULu1D_rf1awi2VHNYmYkLY0ubpC5DWeruZCBxNQiCPLIpxzkMSCijy6AF64ofKw" --redirect-url="https://remotedesktop.google.com/_/oauthredirect" --name=%COMPUTERNAME%
       shell: cmd
+      
+    - name: Wait for 700 minutes
+      run: |
+        echo "Waiting for 700 minutes..."
+        timeout /t 42000 > nul
+      shell: cmd
