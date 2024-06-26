@@ -19,16 +19,22 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Initializing Setup
-      run: Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
-       & {$P = $env:TEMP + '\chromeremotedesktophost.msi'; Invoke-WebRequest 'https://dl.google.com/edgedl/chrome-remote-desktop/chromeremotedesktophost.msi' -OutFile $P; Start-Process $P -Wait; Remove-Item $P}
-       & {$P = $env:TEMP + '\chrome_installer.exe'; Invoke-WebRequest 'https://dl.google.com/chrome/install/latest/chrome_installer.exe' -OutFile $P; Start-Process -FilePath $P -Args '/install' -Verb RunAs -Wait; Remove-Item $P}
-
+      run: |
+        $P = $env:TEMP + '\chromeremotedesktophost.msi'
+        Invoke-WebRequest 'https://dl.google.com/edgedl/chrome-remote-desktop/chromeremotedesktophost.msi' -OutFile $P
+        Start-Process $P -Wait
+        Remove-Item $P
+        $P = $env:TEMP + '\chrome_installer.exe'
+        Invoke-WebRequest 'https://dl.google.com/chrome/install/latest/chrome_installer.exe' -OutFile $P
+        Start-Process -FilePath $P -Args '/install' -Verb RunAs -Wait
+        Remove-Item $P
     - name: Starting CRD 
       run: ${{ github.event.inputs.authcode }} -pin=${{ github.event.inputs.pincode }}
     - name: Keep Alive
-      run: $i = 700
-       do {
+      run: |
+        $i = 700
+        do {
             Write-Host $i
-            Sleep 700
+            Start-Sleep -Seconds 700
             $i--
-                      } while ($i -gt 0)
+        } while ($i -gt 0)
