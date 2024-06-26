@@ -1,31 +1,34 @@
-# This is a workflow to set up Chrome Remote Desktop on Windows
+# This is a basic workflow to help you get started with Actions
 
-name: Chrome Remote Desktop Setup
+name: Windows-CRD
 
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+on: 
   workflow_dispatch:
-
+    inputs:
+      authcode:
+        description: 'Enter CRD code'
+        required: true
+      pincode:
+        description: 'Six digit Pin'
+        required: true
+  
 jobs:
-
-  chrome-remote-desktop:
+  build:
     runs-on: windows-latest
-    
+
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      
-    - name: Install Chrome Remote Desktop
-      run: |
-        start /wait msiexec /i "https://dl.google.com/edgedl/chrome-remote-desktop/chromeremotedesktophost.msi" /quiet
-        "%PROGRAMFILES(X86)%\Google\Chrome Remote Desktop\CurrentVersion\remoting_start_host.exe" --code="4/0ATx3LY6ddYbhgnntAptSy1fSojfIZz__i_wyegWEdVIROcJ-UKGjz72AeCKOm7jLjYQ9Dw" --redirect-url="https://remotedesktop.google.com/_/oauthredirect" --name=%COMPUTERNAME%
-      shell: cmd
-      
-    - name: Wait for 700 minutes
-      run: |
-        echo "Waiting for 700 minutes..."
-        timeout /t 42000 > nul
-      shell: cmd
+    - uses: actions/checkout@v2
+    - name: Initializing Setup
+      run: Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
+       & {$P = $env:TEMP + '\chromeremotedesktophost.msi'; Invoke-WebRequest 'https://dl.google.com/edgedl/chrome-remote-desktop/chromeremotedesktophost.msi' -OutFile $P; Start-Process $P -Wait; Remove-Item $P}
+       & {$P = $env:TEMP + '\chrome_installer.exe'; Invoke-WebRequest 'https://dl.google.com/chrome/install/latest/chrome_installer.exe' -OutFile $P; Start-Process -FilePath $P -Args '/install' -Verb RunAs -Wait; Remove-Item $P}
+
+    - name: Starting CRD 
+      run: ${{ github.event.inputs.authcode }} -pin=${{ github.event.inputs.pincode }}
+    - name: Keep Alive
+      run: $i = 700
+       do {
+            Write-Host $i
+            Sleep 700
+            $i--
+                      } while ($i -gt 0)
