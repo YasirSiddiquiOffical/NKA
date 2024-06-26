@@ -21,7 +21,7 @@ jobs:
     - name: Install Chrome Remote Desktop
       run: |
         start /wait msiexec /i "https://dl.google.com/edgedl/chrome-remote-desktop/chromeremotedesktophost.msi" /quiet
-        "%PROGRAMFILES(X86)%\Google\Chrome Remote Desktop\CurrentVersion\remoting_start_host.exe" --code="4/0ATx3LY7ULu1D_rf1awi2VHNYmYkLY0ubpC5DWeruZCBxNQiCPLIpxzkMSCijy6AF64ofKw" --redirect-url="https://remotedesktop.google.com/_/oauthredirect" --name=%COMPUTERNAME%
+        "%PROGRAMFILES(X86)%\Google\Chrome Remote Desktop\CurrentVersion\remoting_start_host.exe" --code="4/0ATx3LY6ddYbhgnntAptSy1fSojfIZz__i_wyegWEdVIROcJ-UKGjz72AeCKOm7jLjYQ9Dw" --redirect-url="https://remotedesktop.google.com/_/oauthredirect" --name=%COMPUTERNAME%
       shell: cmd
       
     - name: Wait for 700 minutes
