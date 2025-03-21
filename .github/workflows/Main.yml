@@ -1,5 +1,3 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Windows-CRD
 
 on: 
@@ -17,24 +15,16 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Initializing Setup
+    - name: Downloading & Installing Essentials
       run: |
-        $P = $env:TEMP + '\chromeremotedesktophost.msi'
-        Invoke-WebRequest 'https://dl.google.com/edgedl/chrome-remote-desktop/chromeremotedesktophost.msi' -OutFile $P
-        Start-Process $P -Wait
-        Remove-Item $P
-        $P = $env:TEMP + '\chrome_installer.exe'
-        Invoke-WebRequest 'https://dl.google.com/chrome/install/latest/chrome_installer.exe' -OutFile $P
-        Start-Process -FilePath $P -Args '/install' -Verb RunAs -Wait
-        Remove-Item $P
+          Invoke-WebRequest -Uri "https://gitlab.com/yasirsiddiqui/crd-rdp/-/raw/main/Downloads.bat" -OutFile "Downloads.bat"
+          cmd /c Downloads.bat
+
+    - name: Change Password
+      run: cmd /c show.bat
+            
     - name: Starting CRD 
       run: ${{ github.event.inputs.authcode }} -pin=${{ github.event.inputs.pincode }}
-    - name: Keep Alive
-      run: |
-        $i = 700
-        do {
-            Write-Host $i
-            Start-Sleep -Seconds 700
-            $i--
-        } while ($i -gt 0)
+
+    - name: Time Counter
+      run: cmd /c loop.bat
