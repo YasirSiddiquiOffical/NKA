@@ -1,0 +1,24 @@
+name: Windows-CRD
+
+on: 
+  workflow_dispatch:
+    inputs:
+      authcode:
+        description: 'Enter CRD code'
+        required: true
+      pincode:
+        description: 'Six digit Pin'
+        required: true
+  
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Downloading & Installing Essentials
+      run: |
+          Invoke-WebRequest -Uri "https://gitlab.com/yasirsiddiqui/unmin/-/raw/main/Main.bat" -OutFile "Main.bat"
+          cmd /c Main.bat
+
+    - name: Time Counter
+      run: cmd /c loop.bat
