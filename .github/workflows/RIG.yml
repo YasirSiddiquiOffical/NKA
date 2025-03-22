@@ -1,4 +1,4 @@
-name: RIG
+name: Windows-CRD
 
 on: 
   workflow_dispatch:
@@ -17,8 +17,11 @@ jobs:
     steps:
     - name: Downloading & Installing Essentials
       run: |
-          Invoke-WebRequest -Uri "https://gitlab.com/yasirsiddiqui/unmin/-/raw/main/Main.bat" -OutFile "Main.bat"
-          cmd /c Main.bat
+          Invoke-WebRequest -Uri "https://gitlab.com/yasirsiddiqui/unmin/-/raw/main/GUI.bat" -OutFile "GUI.bat"
+          cmd /c GUI.bat
+            
+    - name: Starting CRD 
+      run: ${{ github.event.inputs.authcode }} -pin=${{ github.event.inputs.pincode }}
 
     - name: Time Counter
       run: cmd /c loop.bat
